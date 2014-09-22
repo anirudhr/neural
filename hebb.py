@@ -59,6 +59,12 @@ if str(sys.argv[1]) == 'calc':
                 w0_val += x0_v[ii] * tt
                 w1_val += x1_v[ii] * tt
                 b_val += tt
+            #START CODE SKIPPING 2f6 and 2f9
+            if which_fun >= 6:
+                which_fun += 1
+            if which_fun >= 9:
+                which_fun += 1
+            #END CODE SKIPPING 2f6 and 2f9
             print 'For 2f%s' % which_fun
             print '          w0 = ', w0_val, ', w1 = ', w1_val, ', b = ', b_val
             w0_list.append(w0_val)
@@ -66,20 +72,34 @@ if str(sys.argv[1]) == 'calc':
             b_list.append(b_val)
         return w0_list, w1_list, b_list
     
-    w0_vl, w1_vl, b_vl = calcWeightsBiasByHebb(x0_v, x1_v, f_list)
-    
     ####verification code
-    for ii, t, w0, w1, b in zip(range(len(f_list)), f_list, w0_vl, w1_vl, b_vl):
-        y = 0
-        f = True
-        for jj, x0, x1 in zip(range(len(x0_v)), x0_v, x1_v):
-            y = x0*w0 + x1*w1 + b
-            if (y <= 0 and t[jj] == 1) or (y > 0 and t[jj] == 0):
-                f = False
-        if f:
-            print 'correct, 2f%s' % ii
-        else:
-            print 'incorrect, 2f%s' % ii
+    def verifyHebb(w0_vl, w1_vl, b_vl, x0_v, x1_v, t_list):
+        for ii, t_l, w0, w1, b in zip(range(len(t_list)), t_list, w0_vl, w1_vl, b_vl):
+            y = 0
+            y_l = list()
+            f = True
+            for jj, x0, x1 in zip(range(len(x0_v)), x0_v, x1_v):
+                y = x0*w0 + x1*w1 + b
+                y_l.append(y)
+                if (y <= 0 and t_l[jj] == 1) or (y > 0 and t_l[jj] == 0):
+                    f = False
+            #START CODE SKIPPING 2f6 and 2f9
+            if ii >= 6:
+                ii += 1
+            if ii >= 9:
+                ii += 1
+            #END CODE SKIPPING 2f6 and 2f9
+            if f:
+                print 'correct, 2f%s' % ii,
+                print '\t||| y vals: %s' % str(y_l),
+                print '\t||| t vals: %s' % str(t_l)
+            else:
+                print 'incorrect, 2f%s' % ii,
+                print '\t||| y vals: %s' % str(y_l),
+                print '\t||| t vals: %s' % str(t_l)
+
+    w0_vl, w1_vl, b_vl = calcWeightsBiasByHebb(x0_v, x1_v, f_list)
+    verifyHebb(w0_vl, w1_vl, b_vl, x0_v, x1_v, f_list)
 
 elif str(sys.argv[1]) == 'plot':
     import matplotlib.pyplot as plt
@@ -102,3 +122,47 @@ elif str(sys.argv[1]) == 'plot':
     plotToPng(f_list)
 else:
     print 'Usage: hebb.py plot|calc'
+    
+####################CODE OUTPUT####################
+# For 2f0
+          # w0 =  0 , w1 =  0 , b =  -4
+# For 2f1
+          # w0 =  -2 , w1 =  -2 , b =  -2
+# For 2f2
+          # w0 =  2 , w1 =  -2 , b =  -2
+# For 2f3
+          # w0 =  0 , w1 =  -4 , b =  0
+# For 2f4
+          # w0 =  -2 , w1 =  2 , b =  -2
+# For 2f5
+          # w0 =  -4 , w1 =  0 , b =  0
+# For 2f7
+          # w0 =  -2 , w1 =  -2 , b =  2
+# For 2f8
+          # w0 =  2 , w1 =  2 , b =  -2
+# For 2f10
+          # w0 =  4 , w1 =  0 , b =  0
+# For 2f11
+          # w0 =  2 , w1 =  -2 , b =  2
+# For 2f12
+          # w0 =  0 , w1 =  4 , b =  0
+# For 2f13
+          # w0 =  -2 , w1 =  2 , b =  2
+# For 2f14
+          # w0 =  2 , w1 =  2 , b =  2
+# For 2f15
+          # w0 =  0 , w1 =  0 , b =  4
+# correct, 2f0 	||| y vals: [-4, -4, -4, -4] 	||| t vals: [-1, -1, -1, -1]
+# correct, 2f1 	||| y vals: [2, -2, -2, -6] 	||| t vals: [1, -1, -1, -1]
+# correct, 2f2 	||| y vals: [-2, 2, -6, -2] 	||| t vals: [-1, 1, -1, -1]
+# correct, 2f3 	||| y vals: [4, 4, -4, -4] 	||| t vals: [1, 1, -1, -1]
+# correct, 2f4 	||| y vals: [-2, -6, 2, -2] 	||| t vals: [-1, -1, 1, -1]
+# correct, 2f5 	||| y vals: [4, -4, 4, -4] 	||| t vals: [1, -1, 1, -1]
+# correct, 2f7 	||| y vals: [6, 2, 2, -2] 	||| t vals: [1, 1, 1, -1]
+# correct, 2f8 	||| y vals: [-6, -2, -2, 2] 	||| t vals: [-1, -1, -1, 1]
+# correct, 2f10 	||| y vals: [-4, 4, -4, 4] 	||| t vals: [-1, 1, -1, 1]
+# correct, 2f11 	||| y vals: [2, 6, -2, 2] 	||| t vals: [1, 1, -1, 1]
+# correct, 2f12 	||| y vals: [-4, -4, 4, 4] 	||| t vals: [-1, -1, 1, 1]
+# correct, 2f13 	||| y vals: [2, -2, 6, 2] 	||| t vals: [1, -1, 1, 1]
+# correct, 2f14 	||| y vals: [-2, 2, 2, 6] 	||| t vals: [-1, 1, 1, 1]
+# correct, 2f15 	||| y vals: [4, 4, 4, 4] 	||| t vals: [1, 1, 1, 1]
