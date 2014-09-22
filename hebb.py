@@ -3,7 +3,7 @@
 import sys
 
 #16 different binary logic functions: http://en.wikipedia.org/wiki/Boolean_algebras_canonically_defined#Truth_tables
-#x0	x1	2f0	2f1	2f2	2f3	2f4	2f5	2f6	2f7	2f8	2f9	2f10	2f11	2f12	2f13	2f14	2f15
+#x0_v	x1_v	2f0	2f1	2f2	2f3	2f4	2f5	2f6	2f7	2f8	2f9	2f10	2f11	2f12	2f13	2f14	2f15
 #-1	-1	-1	+1	-1	+1	-1	+1	-1	+1	-1	+1	-1	+1	-1	+1	-1	+1
 #+1	-1	-1	-1	+1	+1	-1	-1	+1	+1	-1	-1	+1	+1	-1	-1	+1	+1
 #-1	+1	-1	-1	-1	-1	+1	+1	+1	+1	-1	-1	-1	-1	+1	+1	+1	+1
@@ -21,8 +21,8 @@ import sys
 
 # To check Hebb rule -generated weight and bias validity, t == x.w + b for each training set
 
-x0 = [-1, 1, -1, 1]
-x1 = [-1, -1, 1, 1]
+x0_v = [-1, 1, -1, 1]
+x1_v = [-1, -1, 1, 1]
 f0 = [-1, -1, -1, -1]
 f1 = [1, -1, -1, -1]
 f2 = [-1, 1, -1, -1]
@@ -47,7 +47,7 @@ if len(sys.argv) != 2:
     exit()
 
 if str(sys.argv[1]) == 'calc':
-    def calcWeightsBiasByHebb(x0, x1, t_list):
+    def calcWeightsBiasByHebb(x0_v, x1_v, t_list):
         w0_list = list()
         w1_list = list()
         b_list = list()
@@ -56,8 +56,8 @@ if str(sys.argv[1]) == 'calc':
             w1_val = 0
             b_val = 0
             for ii, tt in enumerate(t_val):
-                w0_val += x0[ii] * tt
-                w1_val += x1[ii] * tt
+                w0_val += x0_v[ii] * tt
+                w1_val += x1_v[ii] * tt
                 b_val += tt
             print 'For 2f%s' % which_fun
             print '          w0 = ', w0_val, ', w1 = ', w1_val, ', b = ', b_val
@@ -66,9 +66,20 @@ if str(sys.argv[1]) == 'calc':
             b_list.append(b_val)
         return w0_list, w1_list, b_list
     
-    w0, w1, b = calcWeightsBiasByHebb(x0, x1, f_list)
+    w0_vl, w1_vl, b_vl = calcWeightsBiasByHebb(x0_v, x1_v, f_list)
     
     ####verification code
+    for ii, t, w0, w1, b in zip(range(len(f_list)), f_list, w0_vl, w1_vl, b_vl):
+        y = 0
+        f = True
+        for jj, x0, x1 in zip(range(len(x0_v)), x0_v, x1_v):
+            y = x0*w0 + x1*w1 + b
+            if (y <= 0 and t[jj] == 1) or (y > 0 and t[jj] == 0):
+                f = False
+        if f:
+            print 'correct, 2f%s' % ii
+        else:
+            print 'incorrect, 2f%s' % ii
 
 elif str(sys.argv[1]) == 'plot':
     import matplotlib.pyplot as plt
@@ -79,8 +90,8 @@ elif str(sys.argv[1]) == 'plot':
             plt.axis([-3, 3, -3, 3])
             plt.grid()
             for jj in xrange(0, 4):
-                x = x0[jj]
-                y = x1[jj]
+                x = x0_v[jj]
+                y = x1_v[jj]
                 if t_val[jj] == -1:
                     plt.plot(x, y, 'ro')
                     #print str((x, y)), ' is a neg'
