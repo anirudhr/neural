@@ -19,7 +19,7 @@ import sys
 # 4.	wi = wi + xi*y for i = 1 to n
 # 5.	b = b + y
 
-# To check Hebb rule -generated weight and bias validity, t == x.w + b for each training set
+# To check Hebb rule -generated weight and bias validity, t = 1 ? x.w + b > 0 : 0 for each training set
 
 x0_v = [-1, 1, -1, 1]
 x1_v = [-1, -1, 1, 1]
@@ -152,14 +152,14 @@ else:
           # w0 =  2 , w1 =  2 , b =  2
 # For 2f15
           # w0 =  0 , w1 =  0 , b =  4
-# correct, 2f0 	||| y vals: [-4, -4, -4, -4] 	||| t vals: [-1, -1, -1, -1]
-# correct, 2f1 	||| y vals: [2, -2, -2, -6] 	||| t vals: [1, -1, -1, -1]
-# correct, 2f2 	||| y vals: [-2, 2, -6, -2] 	||| t vals: [-1, 1, -1, -1]
-# correct, 2f3 	||| y vals: [4, 4, -4, -4] 	||| t vals: [1, 1, -1, -1]
-# correct, 2f4 	||| y vals: [-2, -6, 2, -2] 	||| t vals: [-1, -1, 1, -1]
-# correct, 2f5 	||| y vals: [4, -4, 4, -4] 	||| t vals: [1, -1, 1, -1]
-# correct, 2f7 	||| y vals: [6, 2, 2, -2] 	||| t vals: [1, 1, 1, -1]
-# correct, 2f8 	||| y vals: [-6, -2, -2, 2] 	||| t vals: [-1, -1, -1, 1]
+# correct, 2f0 		||| y vals: [-4, -4, -4, -4] 	||| t vals: [-1, -1, -1, -1]
+# correct, 2f1 		||| y vals: [2, -2, -2, -6] 	||| t vals: [1, -1, -1, -1]
+# correct, 2f2 		||| y vals: [-2, 2, -6, -2] 	||| t vals: [-1, 1, -1, -1]
+# correct, 2f3 		||| y vals: [4, 4, -4, -4] 	||| t vals: [1, 1, -1, -1]
+# correct, 2f4 		||| y vals: [-2, -6, 2, -2] 	||| t vals: [-1, -1, 1, -1]
+# correct, 2f5 		||| y vals: [4, -4, 4, -4] 	||| t vals: [1, -1, 1, -1]
+# correct, 2f7 		||| y vals: [6, 2, 2, -2] 	||| t vals: [1, 1, 1, -1]
+# correct, 2f8	 	||| y vals: [-6, -2, -2, 2] 	||| t vals: [-1, -1, -1, 1]
 # correct, 2f10 	||| y vals: [-4, 4, -4, 4] 	||| t vals: [-1, 1, -1, 1]
 # correct, 2f11 	||| y vals: [2, 6, -2, 2] 	||| t vals: [1, 1, -1, 1]
 # correct, 2f12 	||| y vals: [-4, -4, 4, 4] 	||| t vals: [-1, -1, 1, 1]
