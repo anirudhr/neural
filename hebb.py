@@ -1,5 +1,8 @@
 #!/usr/bin/python2
 
+# CS-GY 6673 Fall 2014 Assignment 2 solution
+# Anirudh Ramachandran <ar3871@nyu.edu>
+
 import sys
 
 #16 different binary logic functions: http://en.wikipedia.org/wiki/Boolean_algebras_canonically_defined#Truth_tables
