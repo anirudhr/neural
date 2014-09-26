@@ -5,19 +5,23 @@ class perceptron:
         self.w_vec = w_vec
         self.threshold = threshold
         self.bias = -1 * threshold
-    def transfer(self, xx):
-        if xx > self.threshold:
+    def transfer(self, yin):     #Calculates y = fθ(yin)
+        if yin > self.threshold:
             return 1
-        elif xx < -1 * self.threshold:
+        elif yin < -1 * self.threshold:
             return -1
         else:
             return 0
-    def calc_yy(self, x_vec):
+    def calc_yy(self, x_vec):   #Calculates yin = x.w + b
         if len(x_vec) != len(self.w_vec):
             raise Exception('Supplied input length does not match weight length.')
         yy = self.bias
-        for xx,ww in zip(w_vec, self.w_vec):
+        for xx,ww in zip(x_vec, self.w_vec):
             yy += xx*ww
         return yy
-    def train(self, s_vec, t_vec):
+    def train(self, s_vec, t_vec, rate):
+        if rate <= 0:
+            raise Exception('Rate not positive.')
+        if len(s_vec) != len(t_vec):
+            raise Exception('Training set problem: input count does not match result count.')
         ;
