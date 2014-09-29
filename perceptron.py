@@ -3,10 +3,10 @@
 import time
 
 class perceptron:
-    def __init__(self, w_vec, threshold):
+    def __init__(self, w_vec, threshold, bias):
         self.w_vec = w_vec
         self.threshold = threshold
-        self.bias = -1 * threshold
+        self.bias = bias#self.bias = -1 * threshold
     def transfer(self, yin):     #Calculates y = f-theta(yin)
         if yin > self.threshold:
             return 1
@@ -28,7 +28,9 @@ class perceptron:
         if len(s_vec_list) != len(t_vec):
             raise Exception('Training set problem: input count does not match result count.')
         w_change_count = 0
-        while w_change_count < len(s_vec_list):   #Step
+        max_w_change = len(s_vec_list)
+        print '***', max_w_change, '***'
+        while w_change_count < max_w_change:   #Step
             for s_vec, tt in zip(s_vec_list, t_vec):
                 yin = self.calc_yin(s_vec)
                 yy = self.transfer(yin)
@@ -38,19 +40,23 @@ class perceptron:
                 bias_change = 0
                 if yy != tt:
                     for ii, ww in enumerate(self.w_vec):
-                        self.w_vec[ii] = ww + rate*tt*s_vec[ii]
                         w_change[ii] = rate*tt*s_vec[ii]
-                    self.bias = self.bias + rate*tt
+                        self.w_vec[ii] = ww + w_change[ii]
                     bias_change = rate*tt
-                    self.threshold = -1 * self.bias
-                    w_change_count += 1
-                else:
+                    #print '***', bias_change, '***'
+                    self.bias += bias_change
+                    #self.threshold = -1 * self.bias
                     w_change_count = 0
+                else:
+                    w_change_count += 1
+                print '***', w_change_count, '***'
                 print str(s_vec), '|', yin, '|', yy, '|', tt, '|', str(w_change), bias_change, str(self.w_vec), '|', self.bias #'***', w_change_count, '***', 
                 time.sleep(1)
+                if w_change_count == max_w_change:
+                    break
 ###
 
 #p = perceptron([0, 0, 0], 0)
 #p.train([[1, 1, 1], [1, 1, -1], [1, -1, 1], [-1, 1, 1]], [1, -1, -1, -1], 1)
-p = perceptron([0, 0], 0)
+p = perceptron([0, 0], 0.2, 0)
 p.train([[1, 1], [1, -1], [-1, 1], [-1, -1]], [1, -1, -1, -1], 1)
