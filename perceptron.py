@@ -1,5 +1,7 @@
 #!/usr/bin/python2
 
+import time
+
 class perceptron:
     def __init__(self, w_vec, threshold):
         self.w_vec = w_vec
@@ -25,17 +27,30 @@ class perceptron:
             raise Exception('Rate not positive.')
         if len(s_vec_list) != len(t_vec):
             raise Exception('Training set problem: input count does not match result count.')
-        do_loop = 0
-        while do_loop < len(s_vec_list):   #Step
+        w_change_count = 0
+        while w_change_count < len(s_vec_list):   #Step
             for s_vec, tt in zip(s_vec_list, t_vec):
                 yin = self.calc_yin(s_vec)
                 yy = self.transfer(yin)
+                w_change = list()
+                for i in range(len(self.w_vec)):
+                    w_change.append(0)
+                bias_change = 0
                 if yy != tt:
                     for ii, ww in enumerate(self.w_vec):
                         self.w_vec[ii] = ww + rate*tt*s_vec[ii]
-                    self.bias = self.bias + rate*t
+                        w_change[ii] = rate*tt*s_vec[ii]
+                    self.bias = self.bias + rate*tt
+                    bias_change = rate*tt
                     self.threshold = -1 * self.bias
-                    do_loop = 0
+                    w_change_count += 1
                 else:
-                    do_loop += 1
+                    w_change_count = 0
+                print str(s_vec), '|', yin, '|', yy, '|', tt, '|', str(w_change), bias_change, str(self.w_vec), '|', self.bias #'***', w_change_count, '***', 
+                time.sleep(1)
 ###
+
+#p = perceptron([0, 0, 0], 0)
+#p.train([[1, 1, 1], [1, 1, -1], [1, -1, 1], [-1, 1, 1]], [1, -1, -1, -1], 1)
+p = perceptron([0, 0], 0)
+p.train([[1, 1], [1, -1], [-1, 1], [-1, -1]], [1, -1, -1, -1], 1)
