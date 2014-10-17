@@ -1,12 +1,12 @@
 #!/usr/bin/python2
 
-import math
+import math, time
 
 class adaline:
     def __init__(self, w_vec, bias):
         self.w_vec = w_vec
         self.bias = bias
-    def transfer(self, yin, isTraining = False):     #Calculates y = fθ(yin)
+    def transfer(self, yin, isTraining = False):
         if isTraining: #training, f(yin) = yin
             return yin
         else:   #not training, f(yin) = bipolar Heaviside step function
@@ -35,7 +35,10 @@ class adaline:
                 w_change = list()
                 bias_change = -2*rate*(yin - tt)
                 for i in range(len(self.w_vec)):
-                    w_change.append(bias_change*x_vec[i])
+                    w_change.append(bias_change*s_vec[i])
+                print "yy: ", yy
+                print "bias_change: ", bias_change
+                print "w_change: ", w_change
                 self.bias = self.bias + bias_change
                 for ii,wc in enumerate(self.w_vec):
                     self.w_vec[ii] = wc + w_change[ii]
@@ -48,9 +51,10 @@ class adaline:
                         else:
                             insigFlag = False
                             break
+                time.sleep(1)
 ###
 
-p = adaline([0, 0, 0], 0.1, 0)
-p.train([[1, 1, 1], [1, 1, -1], [1, -1, 1], [-1, 1, 1]], [1, -1, -1, -1], 1)
+p = adaline([0, 0, 0, 0], 0)
+p.train([[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]], [1, 1, -1, -1], 0.5)
 #p = adaline([0, 0], 0.2, 0)
 #p.train([[1, 1], [1, -1], [-1, 1], [-1, -1]], [1, -1, -1, -1], 1)
