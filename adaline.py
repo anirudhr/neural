@@ -54,7 +54,14 @@ class adaline:
                 time.sleep(1)
 ###
 
-p = adaline([0, 0, 0, 0], 0)
-p.train([[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]], [1, 1, -1, -1], 0.5)
-#p = adaline([0, 0], 0.2, 0)
-#p.train([[1, 1], [1, -1], [-1, 1], [-1, -1]], [1, -1, -1, -1], 1)
+#p = adaline([0, 0, 0, 0], 0)
+#p.train([[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]], [1, 1, -1, -1], 0.5)
+p = adaline([0, 0], 0)
+
+and_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+and_t_vec = [1, -1, -1, -1]
+p.train(and_s_vec_list, and_t_vec, rate=0.05)
+print "bias: ", p.bias
+print "weights: ", p.w_vec
+for and_s_vec in and_s_vec_list:
+    print "input: ", and_s_vec, "output: ", p.transfer(p.calc_yin(and_s_vec), isTraining = False)
