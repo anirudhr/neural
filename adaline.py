@@ -1,11 +1,8 @@
 #!/usr/bin/python2
-# Using the delta rule, find the weights required to perform the following classifications:
-# Vectors (1, 1, 1, 1) and (−1, 1, −1, −1) are members of one class and have target value of 1;
-# vectors (1, 1, 1, −1) and (1, −1, −1, 1) are members of another class and have target value of −1.
-# Use a learning rate of 0.5 and starting weights of 0.
-# Using each of the training vector as input, test the response of the net.
 
-class perceptron:
+import math
+
+class adaline:
     def __init__(self, w_vec, bias):
         self.w_vec = w_vec
         self.bias = bias
@@ -30,10 +27,30 @@ class perceptron:
             raise Exception('Rate not positive.')
         if len(s_vec_list) != len(t_vec):
             raise Exception('Training set problem: input count does not match result count.')
-        
+        insigFlag = False
+        while insigFlag == False: #Loop till changes in the weights and bias are insignificant.
+            for s_vec, tt in zip(s_vec_list, t_vec):
+                yin = self.calc_yin(s_vec)
+                yy = self.transfer(yin, isTraining = True) # yy = yin
+                w_change = list()
+                bias_change = -2*rate*(yin - tt)
+                for i in range(len(self.w_vec)):
+                    w_change.append(bias_change*x_vec[i])
+                self.bias = self.bias + bias_change
+                for ii,wc in enumerate(self.w_vec):
+                    self.w_vec[ii] = wc + w_change[ii]
+                    
+                if math.fabs(bias_change) < 0.1: #time to check if we need to exit
+                    insigFlag = True
+                    for wc in w_change:
+                        if math.fabs(wc) < 0.1:
+                            insigFlag = True
+                        else:
+                            insigFlag = False
+                            break
 ###
 
-p = perceptron([0, 0, 0], 0.1, 0)
+p = adaline([0, 0, 0], 0.1, 0)
 p.train([[1, 1, 1], [1, 1, -1], [1, -1, 1], [-1, 1, 1]], [1, -1, -1, -1], 1)
-#p = perceptron([0, 0], 0.2, 0)
+#p = adaline([0, 0], 0.2, 0)
 #p.train([[1, 1], [1, -1], [-1, 1], [-1, -1]], [1, -1, -1, -1], 1)
