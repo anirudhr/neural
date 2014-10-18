@@ -17,7 +17,7 @@ class adaline:
     def calc_yin(self, x_vec):   #Calculates yin = x.w + b
         if len(x_vec) != len(self.w_vec):
             raise Exception('Supplied input length does not match weight length.')
-        yin = 0#self.bias
+        yin = 0#self.bias #absorbed bias
         for xx,ww in zip(x_vec, self.w_vec):
             yin += xx*ww
         return yin
