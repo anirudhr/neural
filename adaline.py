@@ -57,21 +57,25 @@ class adaline:
 ###
 
 #ACTUAL
-test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
-test_t_vec = [1, 1, -1, -1]
+#test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
+#test_t_vec = [1, 1, -1, -1]
 #AND for 2
-#test_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
-#test_t_vec = [1, -1, -1, -1]
+test_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+test_t_vec = [1, -1, -1, -1]
 #AND for 4
-# test_s_vec_list = [[1, 1, 1, 1], [1, -1, 1, -1], [-1, 1, -1, 1], [-1, -1, -1, -1]]
-# test_t_vec = [1, -1, -1, -1]
+#test_s_vec_list = [[1, 1, 1, 1], [1, -1, 1, -1], [-1, 1, -1, 1], [-1, -1, -1, -1]]
+#test_t_vec = [1, -1, -1, -1]
 for test_s_vec in test_s_vec_list:
     test_s_vec.insert(0,1)
 p = adaline([0 for x in test_s_vec_list[0]], 0)
 p.train(test_s_vec_list, test_t_vec, rate=0.05) #ACTUAL: 0.5
 #print "bias: ", p.bias
 print "bias+weights: ", p.w_vec
-print "Input comes with shorted 1 at the head for bias use."
+sol_vec = list()
 for test_s_vec in test_s_vec_list:
-    print "input: ", test_s_vec, "output: ", p.transfer(p.calc_yin(test_s_vec), isTraining = False)
-
+    sol_vec.append(p.transfer(p.calc_yin(test_s_vec), isTraining = False))
+#print sol_vec, '\n', test_t_vec
+for i,j in zip(sol_vec, test_t_vec):
+    if i != j:
+        print 't_vec not matched'
+        break
