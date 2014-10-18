@@ -57,11 +57,11 @@ class adaline:
 ###
 
 #ACTUAL
-#test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
-#test_t_vec = [1, 1, -1, -1]
+test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
+test_t_vec = [1, 1, -1, -1]
 #AND for 2
-test_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
-test_t_vec = [1, -1, -1, -1]
+#test_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+#test_t_vec = [1, -1, -1, -1]
 #AND for 4
 #test_s_vec_list = [[1, 1, 1, 1], [1, -1, 1, -1], [-1, 1, -1, 1], [-1, -1, -1, -1]]
 #test_t_vec = [1, -1, -1, -1]
@@ -74,7 +74,7 @@ print "bias+weights: ", p.w_vec
 sol_vec = list()
 for test_s_vec in test_s_vec_list:
     sol_vec.append(p.transfer(p.calc_yin(test_s_vec), isTraining = False))
-#print sol_vec, '\n', test_t_vec
+print 'Solution: ', sol_vec, '\nExpected (t_vec): ', test_t_vec
 for i,j in zip(sol_vec, test_t_vec):
     if i != j:
         print 't_vec not matched'
