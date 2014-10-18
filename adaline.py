@@ -1,6 +1,6 @@
 #!/usr/bin/python2
 
-import math, time
+import math, sys, time
 
 class adaline:
     def __init__(self, w_vec, bias):
@@ -37,9 +37,10 @@ class adaline:
                 bias_change = -2*rate*(yin - tt)
                 for i in range(len(self.w_vec)):
                     w_change.append(bias_change*s_vec[i])
-                print "yy: ", yy
-                print "bias_change: ", bias_change
-                print "w_change: ", w_change
+                if verbose_flag:
+                    print "yy: ", yy
+                    print "bias_change: ", bias_change
+                    print "w_change: ", w_change
                 self.bias = self.bias + bias_change
                 for ii,wc in enumerate(self.w_vec):
                     self.w_vec[ii] = wc + w_change[ii]
@@ -55,6 +56,15 @@ class adaline:
                 #time.sleep(1)
             loopCount += 1
 ###
+verbose_flag = False
+if len(sys.argv) > 2:
+    raise Exception('Too many arguments. Usage: adaline.py [-v|--verbose]')
+elif len(sys.argv) == 1:
+    pass
+elif sys.argv[1] == '-v' or sys.argv[1] == '--verbose':
+    verbose_flag = True
+else:
+    raise Exception('Bad argument. Usage: adaline.py [-v|--verbose]')
 
 #ACTUAL
 test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
@@ -68,14 +78,21 @@ test_t_vec = [1, 1, -1, -1]
 for test_s_vec in test_s_vec_list:
     test_s_vec.insert(0,1)
 p = adaline([0 for x in test_s_vec_list[0]], 0)
-p.train(test_s_vec_list, test_t_vec, rate=0.05) #ACTUAL: 0.5
+p.train(test_s_vec_list, test_t_vec, rate=0.1) #ACTUAL: 0.5
 #print "bias: ", p.bias
-print "bias+weights: ", p.w_vec
+if verbose_flag:
+    print "bias+weights: ", p.w_vec
 sol_vec = list()
 for test_s_vec in test_s_vec_list:
     sol_vec.append(p.transfer(p.calc_yin(test_s_vec), isTraining = False))
-print 'Solution: ', sol_vec, '\nExpected (t_vec): ', test_t_vec
+if verbose_flag:
+    print 'Solution: ', sol_vec, '\nExpected (t_vec): ', test_t_vec
+match_flag = True
 for i,j in zip(sol_vec, test_t_vec):
     if i != j:
-        print 't_vec not matched'
+        match_flag = False
         break
+if match_flag:
+    print 't_vec matched'
+else:
+    print 't_vec not matched'
