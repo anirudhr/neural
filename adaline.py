@@ -57,20 +57,20 @@ class adaline:
 ###
 
 #ACTUAL
-#p = adaline([0, 0, 0, 0], 0)
 #test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
 #test_t_vec = [1, 1, -1, -1]
 #AND for 2
-p = adaline([0, 0, 0], 0)
-test_s_vec_list = [[1, 1, 1], [1, 1, -1], [1, -1, 1], [1, -1, -1]]
+test_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
 test_t_vec = [1, -1, -1, -1]
 #AND for 4
-# p = adaline([0, 0, 0, 0], 0)
 # test_s_vec_list = [[1, 1, 1, 1], [1, -1, 1, -1], [-1, 1, -1, 1], [-1, -1, -1, -1]]
 # test_t_vec = [1, -1, -1, -1]
+for test_s_vec in test_s_vec_list:
+    test_s_vec.insert(0,1)
+p = adaline([0 for x in test_s_vec_list[0]], 0)
 p.train(test_s_vec_list, test_t_vec, rate=0.05)
-
 print "bias: ", p.bias
 print "weights: ", p.w_vec
 for test_s_vec in test_s_vec_list:
     print "input: ", test_s_vec, "output: ", p.transfer(p.calc_yin(test_s_vec), isTraining = False)
+
