@@ -9,9 +9,9 @@ def drange(start, stop, step): #Generator for step <1, from http://stackoverflow
             r += step
 
 class adaline:
-    def __init__(self, w_vec, bias):
+    def __init__(self, w_vec):#, bias): #absorbed
         self.w_vec = w_vec
-        self.bias = bias
+        #self.bias = bias #absorbed
     def transfer(self, yin, isTraining = False):
         if isTraining: #training, f(yin) = yin
             return yin
@@ -23,7 +23,8 @@ class adaline:
     def calc_yin(self, x_vec):   #Calculates yin = x.w + b
         if len(x_vec) != len(self.w_vec):
             raise Exception('Supplied input length does not match weight length.')
-        yin = 0#self.bias #absorbed bias
+        yin = 0
+        #yin = self.bias #absorbed
         for xx,ww in zip(x_vec, self.w_vec):
             yin += xx*ww
         return yin
@@ -45,20 +46,20 @@ class adaline:
                     w_change.append(bias_change*s_vec[i])
                 if verbose_flag:
                     print "yy: ", yy
-                    print "bias_change: ", bias_change
+                    #print "bias_change: ", bias_change #absorbed
                     print "w_change: ", w_change
-                self.bias = self.bias + bias_change
+                #self.bias = self.bias + bias_change #absorbed
                 for ii,wc in enumerate(self.w_vec):
                     self.w_vec[ii] = wc + w_change[ii]
                     
-                if math.fabs(bias_change) < 0.1: #time to check if we need to exit
-                    insigFlag = True
-                    for wc in w_change:
-                        if math.fabs(wc) < 0.1:
-                            insigFlag = True
-                        else:
-                            insigFlag = False
-                            break
+                #if math.fabs(bias_change) < 0.1: #absorbed
+                insigFlag = True #time to check if we need to exit
+                for wc in w_change:
+                    if math.fabs(wc) < 0.1:
+                        insigFlag = True
+                    else:
+                        insigFlag = False
+                        break
                 #time.sleep(1)
             loopCount += 1
 ###
@@ -82,12 +83,11 @@ test_t_vec = [1, 1, -1, -1]
 #test_s_vec_list = [[1, 1, 1, 1], [1, -1, 1, -1], [-1, 1, -1, 1], [-1, -1, -1, -1]]
 #test_t_vec = [1, -1, -1, -1]
 for test_s_vec in test_s_vec_list:
-    test_s_vec.insert(0,1)
+    test_s_vec.insert(0,1) #absorbing the bias by placing an input shorted to 1 at the head of each training vector
 for alpha in drange(0.01,1,0.01):
-    p = adaline([0 for x in test_s_vec_list[0]], 0)
+    p = adaline([0 for x in test_s_vec_list[0]])#, 0) #absorbed
     #alpha = 0.1 #ACTUAL: 0.5
     p.train(test_s_vec_list, test_t_vec, rate=alpha)
-    #print "bias: ", p.bias
     if verbose_flag:
         print "bias+weights: ", p.w_vec
     sol_vec = list()
