@@ -53,24 +53,25 @@ class adaline:
                             insigFlag = False
                             break
                 #time.sleep(1)
-            #loopCount += 1
+            loopCount += 1
 ###
 
 #ACTUAL
-#test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
-#test_t_vec = [1, 1, -1, -1]
+test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
+test_t_vec = [1, 1, -1, -1]
 #AND for 2
-test_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
-test_t_vec = [1, -1, -1, -1]
+#test_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+#test_t_vec = [1, -1, -1, -1]
 #AND for 4
 # test_s_vec_list = [[1, 1, 1, 1], [1, -1, 1, -1], [-1, 1, -1, 1], [-1, -1, -1, -1]]
 # test_t_vec = [1, -1, -1, -1]
 for test_s_vec in test_s_vec_list:
     test_s_vec.insert(0,1)
 p = adaline([0 for x in test_s_vec_list[0]], 0)
-p.train(test_s_vec_list, test_t_vec, rate=0.05)
-print "bias: ", p.bias
-print "weights: ", p.w_vec
+p.train(test_s_vec_list, test_t_vec, rate=0.05) #ACTUAL: 0.5
+#print "bias: ", p.bias
+print "bias+weights: ", p.w_vec
+print "Input comes with shorted 1 at the head for bias use."
 for test_s_vec in test_s_vec_list:
     print "input: ", test_s_vec, "output: ", p.transfer(p.calc_yin(test_s_vec), isTraining = False)
 
