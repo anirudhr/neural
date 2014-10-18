@@ -51,17 +51,19 @@ class adaline:
                         else:
                             insigFlag = False
                             break
-                time.sleep(1)
+                #time.sleep(1)
 ###
 
-#p = adaline([0, 0, 0, 0], 0)
-#p.train([[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]], [1, 1, -1, -1], 0.5)
-p = adaline([0, 0], 0)
+p = adaline([0, 0, 0, 0], 0)
+test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
+test_t_vec = [1, 1, -1, -1]
+p.train(test_s_vec_list, test_t_vec, rate=0.5)#rate=0.5)
+#p = adaline([0, 0], 0)
+#test_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+#test_t_vec = [1, -1, -1, -1]
+#p.train(test_s_vec_list, test_t_vec, rate=0.05)
 
-and_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
-and_t_vec = [1, -1, -1, -1]
-p.train(and_s_vec_list, and_t_vec, rate=0.05)
 print "bias: ", p.bias
 print "weights: ", p.w_vec
-for and_s_vec in and_s_vec_list:
-    print "input: ", and_s_vec, "output: ", p.transfer(p.calc_yin(and_s_vec), isTraining = False)
+for test_s_vec in test_s_vec_list:
+    print "input: ", test_s_vec, "output: ", p.transfer(p.calc_yin(test_s_vec), isTraining = False)
