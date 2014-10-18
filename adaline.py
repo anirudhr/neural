@@ -51,17 +51,22 @@ class adaline:
                         else:
                             insigFlag = False
                             break
-                #time.sleep(1)
+                time.sleep(1)
 ###
 
-p = adaline([0, 0, 0, 0], 0)
-test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
-test_t_vec = [1, 1, -1, -1]
-p.train(test_s_vec_list, test_t_vec, rate=0.5)#rate=0.5)
-#p = adaline([0, 0], 0)
-#test_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
-#test_t_vec = [1, -1, -1, -1]
-#p.train(test_s_vec_list, test_t_vec, rate=0.05)
+#ACTUAL
+#p = adaline([0, 0, 0, 0], 0)
+#test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
+#test_t_vec = [1, 1, -1, -1]
+#AND for 2
+p = adaline([0, 0], 0)
+test_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+test_t_vec = [1, -1, -1, -1]
+#AND for 4
+# p = adaline([0, 0, 0, 0], 0)
+# test_s_vec_list = [[1, 1, 1, 1], [1, -1, 1, -1], [-1, 1, -1, 1], [-1, -1, -1, -1]]
+# test_t_vec = [1, -1, -1, -1]
+p.train(test_s_vec_list, test_t_vec, rate=0.5)
 
 print "bias: ", p.bias
 print "weights: ", p.w_vec
