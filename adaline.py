@@ -17,7 +17,7 @@ class adaline:
     def calc_yin(self, x_vec):   #Calculates yin = x.w + b
         if len(x_vec) != len(self.w_vec):
             raise Exception('Supplied input length does not match weight length.')
-        yin = self.bias
+        yin = 0#self.bias
         for xx,ww in zip(x_vec, self.w_vec):
             yin += xx*ww
         return yin
@@ -28,7 +28,8 @@ class adaline:
         if len(s_vec_list) != len(t_vec):
             raise Exception('Training set problem: input count does not match result count.')
         insigFlag = False
-        while insigFlag == False: #Loop till changes in the weights and bias are insignificant.
+        loopCount = 0
+        while insigFlag == False and loopCount < 1000: #Loop till changes in the weights and bias are insignificant.
             for s_vec, tt in zip(s_vec_list, t_vec):
                 yin = self.calc_yin(s_vec)
                 yy = self.transfer(yin, isTraining = True) # yy = yin
@@ -51,7 +52,8 @@ class adaline:
                         else:
                             insigFlag = False
                             break
-                time.sleep(1)
+                #time.sleep(1)
+            #loopCount += 1
 ###
 
 #ACTUAL
@@ -59,14 +61,14 @@ class adaline:
 #test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
 #test_t_vec = [1, 1, -1, -1]
 #AND for 2
-p = adaline([0, 0], 0)
-test_s_vec_list = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+p = adaline([0, 0, 0], 0)
+test_s_vec_list = [[1, 1, 1], [1, 1, -1], [1, -1, 1], [1, -1, -1]]
 test_t_vec = [1, -1, -1, -1]
 #AND for 4
 # p = adaline([0, 0, 0, 0], 0)
 # test_s_vec_list = [[1, 1, 1, 1], [1, -1, 1, -1], [-1, 1, -1, 1], [-1, -1, -1, -1]]
 # test_t_vec = [1, -1, -1, -1]
-p.train(test_s_vec_list, test_t_vec, rate=0.5)
+p.train(test_s_vec_list, test_t_vec, rate=0.05)
 
 print "bias: ", p.bias
 print "weights: ", p.w_vec
