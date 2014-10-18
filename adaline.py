@@ -2,6 +2,12 @@
 
 import math, sys, time
 
+def drange(start, stop, step): #Generator for step <1, from http://stackoverflow.com/questions/477486/python-decimal-range-step-value
+    r = start
+    while r < stop:
+            yield r
+            r += step
+
 class adaline:
     def __init__(self, w_vec, bias):
         self.w_vec = w_vec
@@ -24,7 +30,7 @@ class adaline:
 
     def train(self, s_vec_list, t_vec, rate):
         if rate <= 0:
-            raise Exception('Rate not positive.')
+            raise Exception('Rate not positive: ' + str(rate))
         if len(s_vec_list) != len(t_vec):
             raise Exception('Training set problem: input count does not match result count.')
         insigFlag = False
@@ -77,22 +83,22 @@ test_t_vec = [1, 1, -1, -1]
 #test_t_vec = [1, -1, -1, -1]
 for test_s_vec in test_s_vec_list:
     test_s_vec.insert(0,1)
-p = adaline([0 for x in test_s_vec_list[0]], 0)
-p.train(test_s_vec_list, test_t_vec, rate=0.1) #ACTUAL: 0.5
-#print "bias: ", p.bias
-if verbose_flag:
-    print "bias+weights: ", p.w_vec
-sol_vec = list()
-for test_s_vec in test_s_vec_list:
-    sol_vec.append(p.transfer(p.calc_yin(test_s_vec), isTraining = False))
-if verbose_flag:
-    print 'Solution: ', sol_vec, '\nExpected (t_vec): ', test_t_vec
-match_flag = True
-for i,j in zip(sol_vec, test_t_vec):
-    if i != j:
-        match_flag = False
-        break
-if match_flag:
-    print 't_vec matched'
-else:
-    print 't_vec not matched'
+for alpha in drange(0.01,1,0.01):
+    p = adaline([0 for x in test_s_vec_list[0]], 0)
+    #alpha = 0.1 #ACTUAL: 0.5
+    p.train(test_s_vec_list, test_t_vec, rate=alpha)
+    #print "bias: ", p.bias
+    if verbose_flag:
+        print "bias+weights: ", p.w_vec
+    sol_vec = list()
+    for test_s_vec in test_s_vec_list:
+        sol_vec.append(p.transfer(p.calc_yin(test_s_vec), isTraining = False))
+    if verbose_flag:
+        print 'Solution: ', sol_vec, '\nExpected (t_vec): ', test_t_vec
+    match_flag = True
+    for i,j in zip(sol_vec, test_t_vec):
+        if i != j:
+            match_flag = False
+            break
+    if match_flag:
+        print 't_vec matched with rate', alpha
