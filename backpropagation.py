@@ -1,5 +1,7 @@
 #!/usr/bin/python2
 
+#Find the new weights when the net illustrated in Figure 6.12 is presented the input pattern (0, l) and the target output is l. Use a learning rate of a = 0.25, and the binary sigmoid activation function.
+
 class perceptron:
     def __init__(self, w_vec, threshold):
         self.w_vec = w_vec
