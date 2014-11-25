@@ -36,7 +36,7 @@ class adaline:
             raise Exception('Training set problem: input count does not match result count.')
         insigFlag = False
         loopCount = 0
-        while insigFlag == False and loopCount < 1000: #Loop till changes in the weights and bias are insignificant.
+        while insigFlag == False and loopCount < numEpochs: #Loop till changes in the weights and bias are insignificant.
             for s_vec, tt in zip(s_vec_list, t_vec):
                 yin = self.calc_yin(s_vec)
                 yy = self.transfer(yin, isTraining = True) # yy = yin
@@ -73,6 +73,7 @@ elif sys.argv[1] == '-v' or sys.argv[1] == '--verbose':
 else:
     raise Exception('Bad argument. Usage: adaline.py [-v|--verbose]')
 
+numEpochs = 100
 #ACTUAL
 test_s_vec_list = [[1, 1, 1, 1], [-1, 1, -1, -1], [1, 1, 1, -1], [1, -1, -1, 1]]
 test_t_vec = [1, 1, -1, -1]
@@ -84,7 +85,7 @@ test_t_vec = [1, 1, -1, -1]
 #test_t_vec = [1, -1, -1, -1]
 for test_s_vec in test_s_vec_list:
     test_s_vec.insert(0,1) #absorbing the bias by placing an input shorted to 1 at the head of each training vector
-for alpha in drange(0.01,1,0.01):
+for alpha in [0.1,0.5]:#drange(0.01,1,0.01):
     p = adaline([0 for x in test_s_vec_list[0]])#, 0) #absorbed
     #alpha = 0.1 #ACTUAL: 0.5
     p.train(test_s_vec_list, test_t_vec, rate=alpha)
