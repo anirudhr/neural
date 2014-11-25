@@ -17,13 +17,15 @@ class BAM:
         self.transfer = np.vectorize(simple_transfer) #transfer function
         self.setweight(s_mat_list, t_mat_list)
     def setweight(self, s_mat_list, t_mat_list):
-        self.w_mat = np.matrix(np.empty([s_mat_list[0].shape[1], t_mat_list[0].shape[1]])) #will be filled with garbage values, will be same as using np.zeros() but marginally faster
+        self.w_mat = np.matrix(np.zeros([s_mat_list[0].shape[1], t_mat_list[0].shape[1]]))
         for s_mat, t_mat in zip(s_mat_list, t_mat_list):
             self.w_mat += s_mat.getT() * t_mat
     def inp_left(self, x_mat):
+        #print x_mat * self.w_mat
         return self.transfer(x_mat * self.w_mat)
     
     def inp_right(self, y_mat):
+        #print y_mat * self.w_mat.getT()
         return self.transfer(y_mat * self.w_mat.getT())
     
 def translate_input(inputtxt): #converts a string such as '.##\n#..\n#..\n#..\n.##' into the input matrix
@@ -48,11 +50,31 @@ inp_x = """#.#
 .#.
 #.#
 #.#"""
-t_x = np.matrix('1 -1 1')
+t_x = np.matrix('1 1 -1')
 
 inp_list = [translate_input(inp_c), translate_input(inp_d), translate_input(inp_x)]
 out_list = [t_c, t_d, t_x]
 
 bam_cdx = BAM(inp_list, out_list)
+#print bam_cdx.w_mat
+print "Clean input from left:"
 print bam_cdx.inp_left(translate_input(inp_c))
-print bam_cdx.inp_right(t_d)
+print "Noisy input from left:"
+print bam_cdx.inp_left(np.matrix('0 1 0 1 0 1 0 1 0 1 0 1 0 1 0'))
+print "Clean input from right:"
+print bam_cdx.inp_right(t_c)
+print "Noisy input from right:"
+print bam_cdx.inp_right(np.matrix('-1 1 -1'))
+
+"""
+Output:
+$ python bam.py 
+Clean input from left:
+[[-1  1  1]]
+Noisy input from left:
+[[ 1 -1  1]]
+Clean input from right:
+[[ 1 -1 -1  1 -1  1 -1  1  1  1 -1  1  1 -1 -1]]
+Noisy input from right:
+[[-1  1  1 -1  1 -1  1 -1 -1 -1  1 -1 -1  1  1]]
+"""
