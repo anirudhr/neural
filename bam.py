@@ -38,7 +38,13 @@ inp_c = """.##
 #..
 #..
 .##"""
+inp_c_mistake = """.##
+.#.
+.#.
+.#.
+.##"""
 t_c = np.matrix('-1 1 1')
+t_c_mistake = np.matrix('-1 -1 1')
 inp_d = """##.
 #.#
 #.#
@@ -61,8 +67,13 @@ print "Clean input from left:"
 print bam_cdx.inp_left(translate_input(inp_c))
 print "Noisy input from left:"
 print bam_cdx.inp_left(np.matrix('0 1 0 1 0 1 0 1 0 1 0 1 0 1 0'))
+print "Mistake-containing input from left:"
+print bam_cdx.inp_left(translate_input(inp_c_mistake))
+
 print "Clean input from right:"
 print bam_cdx.inp_right(t_c)
+print "Mistake-containing input from right:"
+print bam_cdx.inp_right(t_c_mistake)
 print "Noisy input from right:"
 print bam_cdx.inp_right(np.matrix('-1 1 -1'))
 
@@ -73,8 +84,12 @@ Clean input from left:
 [[-1  1  1]]
 Noisy input from left:
 [[ 1 -1  1]]
+Mistake-containing input from left:
+[[-1  1 -1]]
 Clean input from right:
-[[ 1 -1 -1  1 -1  1 -1  1  1  1 -1  1  1 -1 -1]]
+[[-1  1  1  1 -1 -1  1 -1 -1  1 -1 -1 -1  1  1]]
+Mistake-containing input from right:
+[[-1  1 -1 -1  1 -1  1 -1  1 -1  1 -1 -1  1 -1]]
 Noisy input from right:
-[[-1  1  1 -1  1 -1  1 -1 -1 -1  1 -1 -1  1  1]]
+[[-1 -1  1 -1  1 -1 -1  1 -1 -1  1 -1 -1 -1  1]]
 """
