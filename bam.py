@@ -24,24 +24,58 @@ class BAM:
         for s_mat, t_mat in zip(s_mat_list, t_mat_list):
             self.w_mat += s_mat.getT() * t_mat
     def inp_left(self, x_mat):
-        yin = x_mat * self.w_mat
-        y = np.matrix(np.zeros([yin.shape[1]]))
-        y = self.transfer(yin, y)
-        #test for convergence, else repeat this.
+        firstrun_flag = True
+        convergence_flag = False
+        while not convergence_flag:
+            yin = x_mat * self.w_mat
+            if firstrun_flag:
+                y = np.matrix(np.zeros([yin.shape[1]]))
+            yold = y
+            y = self.transfer(yin, y)
+            xin = y * self.w_mat.getT()
+            if firstrun_flag:
+                x = np.matrix(np.zeros([xin.shape[1]]))
+                firstrun_flag = False
+            xold = x
+            x = self.transfer(xin, x)
+            ydiff = list(np.array(y-yold).reshape(-1,))
+            xdiff = list(np.array(x-xold).reshape(-1,))
+            convergence_flag = True
+            for i,j in zip(ydiff, xdiff):
+                if i or j:
+                    convergence_flag = False
+                    #print 'Not converged'
         return y
     
     def inp_right(self, y_mat):
-        xin = y_mat * self.w_mat.getT()
-        x = np.matrix(np.zeros([xin.shape[1]]))
-        x = self.transfer(xin, x)
-        #test for convergence, else repeat this.
+        firstrun_flag = True
+        convergence_flag = False
+        while not convergence_flag:
+            xin = y_mat * self.w_mat.getT()
+            if firstrun_flag:
+                x = np.matrix(np.zeros([xin.shape[1]]))
+            xold = x
+            x = self.transfer(xin, x)
+            yin = x * self.w_mat#.getT()
+            if firstrun_flag:
+                y = np.matrix(np.zeros([yin.shape[1]]))
+                firstrun_flag = False
+            yold = y
+            y = self.transfer(yin, y)
+            xdiff = list(np.array(y-yold).reshape(-1,))
+            ydiff = list(np.array(x-xold).reshape(-1,))
+            convergence_flag = True
+            for i,j in zip(xdiff, ydiff):
+                if i or j:
+                    convergence_flag = False
+                    #print 'Not converged'
         return x
-    
+
 def translate_input(inputtxt): #converts a string such as '.##\n#..\n#..\n#..\n.##' into the input matrix
     return np.matrix(re.sub('#', '1 ',
                         re.sub('\.', '-1 ',
                             re.sub('\n', '; ', inputtxt)))).flatten()
-                                
+
 inp_c = """.##
 #..
 #..
@@ -88,17 +122,17 @@ print bam_cdx.inp_right(np.matrix('-1 1 -1'))
 
 """
 Output:
-$ python bam.py 
+$ ./bam.py 
 Clean input from left:
-[[-1  1  1]]
+[[-1.  1.  1.]]
 Noisy input from left:
-[[ 1 -1  1]]
+[[ 1. -1.  1.]]
 Mistake-containing input from left:
-[[-1  1  1]]
+[[-1.  1.  1.]]
 Clean input from right:
-[[-1  1  1  1 -1 -1  1 -1 -1  1 -1 -1 -1  1  1]]
+[[-1.  1.  1.  1. -1. -1.  1. -1. -1.  1. -1. -1. -1.  1.  1.]]
 Mistake-containing input from right:
-[[-1  1 -1 -1  1 -1  1 -1  1 -1  1 -1 -1  1 -1]]
+[[-1.  1. -1. -1.  1. -1.  1. -1.  1. -1.  1. -1. -1.  1. -1.]]
 Noisy input from right:
-[[-1 -1  1 -1  1 -1 -1  1 -1 -1  1 -1 -1 -1  1]]
+[[-1. -1.  1. -1.  1. -1. -1.  1. -1. -1.  1. -1. -1. -1.  1.]]
 """
