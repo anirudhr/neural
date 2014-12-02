@@ -10,7 +10,7 @@ def simple_transfer(x):
         elif x < 0:
             return -1
         else:
-            return 0
+            return x
 
 class BAM:
     def __init__(self, s_mat_list, t_mat_list): #s_mat_list, t_mat_list = list of np.matrix
