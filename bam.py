@@ -21,12 +21,16 @@ class BAM:
         for s_mat, t_mat in zip(s_mat_list, t_mat_list):
             self.w_mat += s_mat.getT() * t_mat
     def inp_left(self, x_mat):
-        #print x_mat * self.w_mat
-        return self.transfer(x_mat * self.w_mat)
+        yin = x_mat * self.w_mat
+        y = self.transfer(yin)
+        #test for convergence, else repeat this.
+        return y
     
     def inp_right(self, y_mat):
-        #print y_mat * self.w_mat.getT()
-        return self.transfer(y_mat * self.w_mat.getT())
+        xin = y_mat * self.w_mat.getT()
+        x = self.transfer(xin)
+        #test for convergence, else repeat this.
+        return x
     
 def translate_input(inputtxt): #converts a string such as '.##\n#..\n#..\n#..\n.##' into the input matrix
     return np.matrix(re.sub('#', '1 ',
@@ -40,8 +44,8 @@ inp_c = """.##
 .##"""
 inp_c_mistake = """.##
 .#.
-.#.
-.#.
+#..
+#..
 .##"""
 t_c = np.matrix('-1 1 1')
 t_c_mistake = np.matrix('-1 -1 1')
@@ -85,7 +89,7 @@ Clean input from left:
 Noisy input from left:
 [[ 1 -1  1]]
 Mistake-containing input from left:
-[[-1  1 -1]]
+[[-1  1  1]]
 Clean input from right:
 [[-1  1  1  1 -1 -1  1 -1 -1  1 -1 -1 -1  1  1]]
 Mistake-containing input from right:
