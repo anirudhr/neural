@@ -12,8 +12,8 @@ def simple_transfer(x):
         else:
             return x
 """
-def simple_transfer(x):
-    return (x/abs(x)) if x else 0
+def simple_transfer(xin, x):
+    return (xin/abs(xin)) if xin else x
     
 class BAM:
     def __init__(self, s_mat_list, t_mat_list): #s_mat_list, t_mat_list = list of np.matrix
@@ -25,13 +25,15 @@ class BAM:
             self.w_mat += s_mat.getT() * t_mat
     def inp_left(self, x_mat):
         yin = x_mat * self.w_mat
-        y = self.transfer(yin)
+        y = np.matrix(np.zeros([yin.shape[1]]))
+        y = self.transfer(yin, y)
         #test for convergence, else repeat this.
         return y
     
     def inp_right(self, y_mat):
         xin = y_mat * self.w_mat.getT()
-        x = self.transfer(xin)
+        x = np.matrix(np.zeros([xin.shape[1]]))
+        x = self.transfer(xin, x)
         #test for convergence, else repeat this.
         return x
     
