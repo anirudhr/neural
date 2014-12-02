@@ -3,7 +3,7 @@
 
 import numpy as np
 import re
-
+"""
 def simple_transfer(x):
         if x > 0:
             return 1
@@ -11,7 +11,10 @@ def simple_transfer(x):
             return -1
         else:
             return x
-
+"""
+def simple_transfer(x):
+    return (x/abs(x)) if x else 0
+    
 class BAM:
     def __init__(self, s_mat_list, t_mat_list): #s_mat_list, t_mat_list = list of np.matrix
         self.transfer = np.vectorize(simple_transfer) #transfer function

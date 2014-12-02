@@ -5,16 +5,9 @@ import numpy as np
 import re
 
 def simple_transfer(x):
-        if x > 0:
-            return 1
-        elif x < 0:
-            return -1
-        else:
-            return x
+    return (x/abs(x)) if x else 0
 
-class BAM: #need to test for convergence.
-#biases for Y-layer (input left) are b_j^Y = sum_q=1toQ(t_j^q)
-#biases for X-layer (input right) are b_i^X = sum_q=1toQ(s_i^q)
+class BAM:
     def __init__(self, s_mat_list, t_mat_list): #s_mat_list, t_mat_list = list of np.matrix
         self.transfer = np.vectorize(simple_transfer) #transfer function
         self.setweight(s_mat_list, t_mat_list)
