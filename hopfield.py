@@ -2,18 +2,9 @@
 
 import numpy as np
 import re
-"""
-def simple_transfer(x):
-        if x > 0:
-            return 1
-        elif x < 0:
-            return -1
-        else:
-            return x
-"""
+from random import shuffle
 
 def rand_range(N):
-    from random import shuffle
     x = [i for i in range(N)]
     shuffle(x)
     return x
@@ -80,7 +71,208 @@ inp_x = translate_input("""#.#
 #.#
 #.#""")
 
-s_mat_list = [inp_c, inp_d, inp_s, inp_x]
-#s_mat_list = [np.matrix([1, 1, 1, -1]), np.matrix([1, -1, 1, 1])]
-hopfield = DiscreteHopfieldNet(s_mat_list)
-print hopfield.inp(inp_c)
+s_mat_dict = {'C': inp_c, 'D': inp_d, 'S': inp_s, 'X': inp_x}
+char_list = ['C', 'D', 'S', 'X']
+NUM_ITER = 10
+for i in xrange(NUM_ITER):
+    s_mat_list = list()
+    shuffle(char_list)
+    for j in char_list:
+        s_mat_list.append(s_mat_dict[j])
+    hopfield = DiscreteHopfieldNet(s_mat_list)
+    outs = dict()
+    for j in rand_range(4):
+        outs[char_list[j]] = hopfield.inp(s_mat_dict[char_list[j]])
+    print "Iteration ", i
+    for char, s_mat in s_mat_dict.iteritems():
+        for j in char_list:
+            match_flag = False
+            if (outs[j] == s_mat).all():
+                match_flag = match_flag or True
+                print "\tOutput pattern", outs[j] , " for ", j, "matches character ", char,
+                if j == char:
+                    print "(stable)" 
+                else:
+                    print "(spurious)" 
+            if not match_flag:
+                print "\t No match in output pattern", outs[j] , "for ", j
+#:indentSize=4:tabSize=4:noTabs=true:wrap=soft:
+
+"""
+OUTPUT
+$ python hopfield.py 
+Iteration  0
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+        Output pattern [[-1  1  1 -1 -1 -1  1 -1 -1 -1 -1 -1  1  1 -1]]  for  S matches character  S (stable)
+         No match in output pattern [[ 1  1 -1  1 -1  1  1  1  1  1  1  1  1  1 -1]] for  D
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  1  1]] for  C
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  X (stable)
+         No match in output pattern [[-1  1  1 -1 -1 -1  1 -1 -1 -1 -1 -1  1  1 -1]] for  S
+         No match in output pattern [[ 1  1 -1  1 -1  1  1  1  1  1  1  1  1  1 -1]] for  D
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  1  1]] for  C
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+         No match in output pattern [[-1  1  1 -1 -1 -1  1 -1 -1 -1 -1 -1  1  1 -1]] for  S
+         No match in output pattern [[ 1  1 -1  1 -1  1  1  1  1  1  1  1  1  1 -1]] for  D
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  1  1]]  for  C matches character  C (stable)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+         No match in output pattern [[-1  1  1 -1 -1 -1  1 -1 -1 -1 -1 -1  1  1 -1]] for  S
+        Output pattern [[ 1  1 -1  1 -1  1  1  1  1  1  1  1  1  1 -1]]  for  D matches character  D (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  1  1]] for  C
+Iteration  1
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  S (stable)
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  S (spurious)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  X (stable)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  X (spurious)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  C (spurious)
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  C (stable)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  D (spurious)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  D (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+Iteration  2
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  S (stable)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  S (spurious)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  X (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  X (spurious)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  C (spurious)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  C (stable)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  D (spurious)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  D (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+Iteration  3
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  S (spurious)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  S (stable)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  X (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  X (spurious)
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  C (stable)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  C (spurious)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  D (spurious)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  D (stable)
+Iteration  4
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  S (stable)
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  S (spurious)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  X (spurious)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  X (stable)
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  C (spurious)
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  C (stable)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  D (stable)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  D (spurious)
+Iteration  5
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  S (spurious)
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  S (stable)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  X (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  X (spurious)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  C (stable)
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  C (spurious)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  D (spurious)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  D (stable)
+Iteration  6
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  S (stable)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  S (spurious)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  X (spurious)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  X (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  C (spurious)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  C (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  D (stable)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  D (spurious)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+Iteration  7
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  S (spurious)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  S (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  X (stable)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  X (spurious)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  C (stable)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  C (spurious)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  D (spurious)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  D (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+Iteration  8
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  S (spurious)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  S (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  X (spurious)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  X (stable)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  C (stable)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  C (spurious)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  D (stable)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  D (spurious)
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+Iteration  9
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  S (spurious)
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  S (stable)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  X (spurious)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  X (stable)
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  C matches character  C (stable)
+        Output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]]  for  S matches character  C (spurious)
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  D
+         No match in output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]] for  X
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  C
+         No match in output pattern [[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]] for  S
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  D (stable)
+        Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  D (spurious)
+
+1: Yes, all 4 stored patterns are equilibrium states.
+2: 
+
+"""
