@@ -272,7 +272,34 @@ Iteration  9
         Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  D matches character  D (stable)
         Output pattern [[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]]  for  X matches character  D (spurious)
 
-1: Yes, all 4 stored patterns are equilibrium states.
-2: 
-
+All 4 stored patterns are equilibrium states. Some of the spurious states look like one of the other 3 characters. The rest match to one of these:
+# # #
+# # #
+# # #
+# # #
+# # #
+=======================
+. . .
+. . .
+. . .
+. . .
+. . .
+=======================
+# # .
+# . #
+# # #
+# # #
+# # .
+=======================
+. . .
+. . .
+. . .
+. . .
+. # #
+=======================
+. # #
+. . .
+# . .
+. . .
+# # .
 """
